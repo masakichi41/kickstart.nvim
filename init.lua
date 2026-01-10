@@ -936,7 +936,7 @@ require('lazy').setup({
   { -- コードのハイライト、編集、ナビゲーション
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- optsに使用するメインモジュールを設定
+    main = 'nvim-treesitter.config', -- optsに使用するメインモジュールを設定
     -- [[ Treesitterの設定 ]] `:help nvim-treesitter`を参照
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
@@ -1009,3 +1009,21 @@ require('lazy').setup({
 
 -- 以下の行は`modeline`と呼ばれます。`:help modeline`を参照
 -- vim: ts=2 sts=2 sw=2 et
+
+-- IME自動切り替え（macOS用）
+if vim.fn.has 'mac' == 1 then
+  local ime_group = vim.api.nvim_create_augroup('IMEControl', { clear = true })
+
+  vim.api.nvim_create_autocmd({
+    'InsertLeave',
+    'CmdlineLeave',
+    'FocusGained',
+    'VimEnter',
+  }, {
+    group = ime_group,
+    pattern = '*',
+    callback = function()
+      vim.fn.jobstart({ 'macism', 'com.apple.keylayout.ABC' }, { detach = true })
+    end,
+  })
+end
