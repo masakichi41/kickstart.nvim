@@ -979,7 +979,7 @@ require('lazy').setup({
   --    これは設定をモジュール化する最も簡単な方法です。
   --
   --  以下の行のコメントを解除し、`lua/custom/plugins/*.lua`にプラグインを追加して始めましょう。
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- 読み込み、ソーシング、例に関する追加情報は`:help lazy.nvim-🔌-plugin-spec`を参照
   -- またはTelescopeを使用！
