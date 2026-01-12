@@ -89,6 +89,11 @@ P.S. これも終わったら削除できます。もうあなたの設定です
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- エンコーディング設定
+vim.scriptencoding = 'utf-8'
+vim.opt.encoding = 'utf-8'
+vim.opt.fileencoding = 'utf-8'
+
 -- ターミナルにNerd Fontがインストールされ、選択されている場合はtrueに設定
 vim.g.have_nerd_font = true
 
@@ -1027,3 +1032,20 @@ if vim.fn.has 'mac' == 1 then
     end,
   })
 end
+
+vim.keymap.set('n', '<leader>t', function()
+  if vim.bo.filetype == 'neo-tree' then
+    vim.cmd 'wincmd l'
+    if vim.bo.filetype == 'neo-tree' then
+      vim.cmd 'vsplit'
+    end
+  end
+
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[buf].buftype == 'terminal' then
+      vim.api.nvim_set_current_buf(buf)
+      return
+    end
+  end
+  vim.cmd 'terminal'
+end, { desc = 'Open terminal' })
