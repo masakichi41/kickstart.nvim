@@ -673,6 +673,7 @@ require('lazy').setup({
       --  - settings (table): サーバー初期化時に渡されるデフォルト設定をオーバーライド
       --        例えば、`lua_ls`のオプションを見るには: https://luals.github.io/wiki/settings/
       local servers = {
+        vtsls = {},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},

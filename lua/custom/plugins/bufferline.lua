@@ -25,18 +25,14 @@ return {
   keys = {
     { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer' },
     { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer' },
-    { '<leader>x', '<cmd>bdelete<cr>', desc = 'Close buffer' },
     {
       '<leader>x',
       function()
-        local bufs = vim.tbl_filter(function(b)
-          return vim.bo[b].buflisted
-        end, vim.api.nvim_list_bufs())
-
-        if #bufs <= 1 then
-          vim.cmd 'terminal'
+        local buf = vim.api.nvim_get_current_buf()
+        local buftype = vim.bo[buf].buftype
+        if buftype == '' then
+          vim.cmd 'bdelete'
         end
-        vim.cmd 'bdelete! #'
       end,
       desc = 'Close buffer',
     },
