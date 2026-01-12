@@ -90,7 +90,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- ターミナルにNerd Fontがインストールされ、選択されている場合はtrueに設定
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ オプション設定 ]]
 -- `:help vim.o`を参照
