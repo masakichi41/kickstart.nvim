@@ -674,6 +674,8 @@ require('lazy').setup({
       --        例えば、`lua_ls`のオプションを見るには: https://luals.github.io/wiki/settings/
       local servers = {
         vtsls = {},
+        biome = {},
+        eslint = {},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
