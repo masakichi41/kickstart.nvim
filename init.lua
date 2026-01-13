@@ -349,6 +349,8 @@ require('lazy').setup({
       spec = {
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>o', group = '[O]pen' },
+        { '<leader>g', group = '[G]it' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -537,42 +539,13 @@ require('lazy').setup({
             vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
 
-          -- カーソル下の変数をリネーム
-          --  ほとんどの言語サーバーはファイル間でのリネームをサポートしています
-          map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-
-          -- コードアクションを実行。通常、カーソルはエラーの上か
-          -- LSPからの提案の上にある必要があります
-          map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-
-          -- カーソル下の単語の参照を検索
-          map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-          -- カーソル下の単語の実装にジャンプ
-          --  言語が実際の実装なしに型を宣言する方法がある場合に便利
-          map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
-          -- カーソル下の単語の定義にジャンプ
-          --  変数が最初に宣言された場所や、関数が定義されている場所など
-          --  戻るには<C-t>を押します
-          map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
-          -- WARN: これは定義へ移動ではなく、宣言へ移動です
-          --  例えば、Cではヘッダーに移動します
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-          -- 現在のドキュメント内のすべてのシンボルをファジー検索
-          --  シンボルとは変数、関数、型などです
-          map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-
-          -- 現在のワークスペース内のすべてのシンボルをファジー検索
-          --  ドキュメントシンボルと似ていますが、プロジェクト全体を検索します
-          map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
-
-          -- カーソル下の単語の型にジャンプ
-          --  変数の型がわからないときに、*定義された*場所ではなく
-          --  *型*の定義を見たいときに便利
-          map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+          map('gi', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+          map('gt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
 
           -- この関数はneovim nightly（バージョン0.11）とstable（バージョン0.10）の違いを解決します
           ---@param client vim.lsp.Client
@@ -1036,7 +1009,7 @@ if vim.fn.has 'mac' == 1 then
   })
 end
 
-vim.keymap.set('n', '<leader>t', function()
+vim.keymap.set('n', '<leader>ot', function()
   if vim.bo.filetype == 'neo-tree' then
     vim.cmd 'wincmd l'
     if vim.bo.filetype == 'neo-tree' then
@@ -1051,4 +1024,4 @@ vim.keymap.set('n', '<leader>t', function()
     end
   end
   vim.cmd 'terminal'
-end, { desc = 'Open terminal' })
+end, { desc = '[O]pen [T]erminal' })
