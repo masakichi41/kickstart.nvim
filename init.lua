@@ -992,7 +992,7 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 
 -- IME自動切り替え（macOS用）
-if vim.fn.has 'mac' == 1 then
+if vim.fn.has 'mac' == 1 and vim.fn.executable 'macism' == 1 then
   local ime_group = vim.api.nvim_create_augroup('IMEControl', { clear = true })
 
   vim.api.nvim_create_autocmd({
