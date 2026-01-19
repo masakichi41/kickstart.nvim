@@ -9,12 +9,18 @@ return {
   lazy = false,
   keys = {
     { '<leader>e', '<cmd>Neotree toggle<cr>', desc = 'Toggle Explorer' },
+    { '<leader>E', '<cmd>Neotree reveal<cr>', desc = 'Reveal current file' },
   },
   opts = {
-    open_files_do_not_replace_types = { 'trouble', 'qf' },
+    close_if_last_window = true, -- neo-treeだけになったら閉じる
     window = {
       position = 'left',
-      width = 25,
+      width = 30,
+      mappings = {
+        ['<space>'] = 'none',
+        ['l'] = 'open',
+        ['h'] = 'close_node',
+      },
     },
     filesystem = {
       follow_current_file = { enabled = true },
@@ -23,24 +29,24 @@ return {
         visible = true,
         hide_dotfiles = false,
         hide_gitignored = false,
-        never_show = {
-          '.git',
-          '.DS_Store',
+        never_show = { '.git', '.DS_Store' },
+      },
+      use_libuv_file_watcher = true,
+    },
+    default_component_configs = {
+      git_status = {
+        symbols = {
+          added = '+',
+          modified = '~',
+          deleted = '-',
+          renamed = '→',
+          untracked = '?',
+          ignored = '◌',
+          unstaged = '○',
+          staged = '●',
+          conflict = '!',
         },
       },
     },
   },
-  init = function()
-    vim.api.nvim_create_autocmd('VimEnter', {
-      callback = function()
-        local args = vim.fn.argv()
-        if #args == 0 then
-          vim.cmd 'terminal'
-          vim.cmd 'Neotree focus'
-        else
-          vim.cmd 'Neotree show'
-        end
-      end,
-    })
-  end,
 }
