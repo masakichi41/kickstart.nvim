@@ -356,80 +356,6 @@ require('lazy').setup({
     },
   },
 
-  -- NOTE: プラグインは依存関係を指定できます。
-  --
-  -- 依存関係も適切なプラグイン仕様です。トップレベルのプラグインで
-  -- できることは、依存関係でもできます。
-  --
-  -- 特定のプラグインの依存関係を指定するには`dependencies`キーを使用
-
-  { -- ファジーファインダー（ファイル、LSPなど）
-    'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      { -- エラーが発生した場合は、telescope-fzf-nativeのREADMEでインストール手順を確認
-        'nvim-telescope/telescope-fzf-native.nvim',
-
-        -- `build`はプラグインのインストール/更新時にコマンドを実行するために使用
-        -- これはその時だけ実行され、Neovim起動のたびには実行されません
-        build = 'make',
-
-        -- `cond`はこのプラグインをインストールして読み込むかどうかを決定する条件
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
-      },
-      { 'nvim-telescope/telescope-ui-select.nvim' },
-
-      -- きれいなアイコンを表示するのに便利ですが、Nerd Fontが必要
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
-    },
-    config = function()
-      -- Telescopeは多くの異なるものをファジー検索できるファジーファインダーです！
-      -- 単なる「ファイルファインダー」以上のもので、Neovim、ワークスペース、
-      -- LSPなど、多くの異なる側面を検索できます！
-      --
-      -- Telescopeを使う最も簡単な方法は、以下のようにすることから始めることです：
-      --  :Telescope help_tags
-      --
-      -- このコマンドを実行すると、ウィンドウが開き、
-      -- プロンプトウィンドウに入力できます。`help_tags`オプションのリストと
-      -- 対応するヘルプのプレビューが表示されます。
-      --
-      -- Telescope使用中の2つの重要なキーマップ：
-      --  - インサートモード: <c-/>
-      --  - ノーマルモード: ?
-      --
-      -- これにより、現在のTelescopeピッカーのすべてのキーマップを表示する
-      -- ウィンドウが開きます。Telescopeで何ができるか、
-      -- 実際にどうやるかを発見するのに非常に便利です！
-
-      -- [[ Telescopeの設定 ]]
-      -- `:help telescope`および`:help telescope.setup()`を参照
-      require('telescope').setup {
-        -- デフォルトのマッピング/更新等をここに記述できます
-        --  探している情報はすべて`:help telescope.setup()`にあります
-        --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
-        extensions = {
-          ['ui-select'] = {
-            require('telescope.themes').get_dropdown(),
-          },
-        },
-      }
-
-      -- Telescope拡張機能がインストールされていれば有効化
-      pcall(require('telescope').load_extension, 'fzf')
-      pcall(require('telescope').load_extension, 'ui-select')
-    end,
-  },
-
   -- LSPプラグイン
   {
     -- `lazydev`はNeovim設定、ランタイム、プラグイン用のLua LSPを設定
@@ -504,7 +430,6 @@ require('lazy').setup({
           end
 
           map('gd', require('fzf-lua').lsp_definitions, '[G]oto [D]efinition')
-          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
           map('gr', require('fzf-lua').lsp_references, '[G]oto [R]eferences')
           map('gi', require('fzf-lua').lsp_implementations, '[G]oto [I]mplementation')
           map('gt', require('fzf-lua').lsp_typedefs, '[G]oto [T]ype Definition')
@@ -657,7 +582,9 @@ require('lazy').setup({
       -- 他のツールをここに追加できます。
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Luaコードのフォーマットに使用
+        'stylua',
+        'biome',
+        'eslint_d',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -675,47 +602,6 @@ require('lazy').setup({
         },
       }
     end,
-  },
-
-  { -- 自動フォーマット
-    'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
-    cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
-        mode = '',
-        desc = '[F]ormat buffer',
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- 標準化されたコーディングスタイルがない言語では
-        -- "format_on_save lsp_fallback"を無効にする。ここに他の言語を追加したり、
-        -- 無効にした言語を再度有効にすることができます。
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conformは複数のフォーマッターを順番に実行することもできます
-        -- python = { "isort", "black" },
-        --
-        -- 'stop_after_first'を使用してリストから最初に利用可能なフォーマッターを実行できます
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
   },
 
   { -- 自動補完

@@ -25,6 +25,8 @@ return {
   keys = {
     { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev buffer' },
     { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next buffer' },
+    { '<leader>bp', '<cmd>BufferLinePick<cr>', desc = 'Pick buffer' },
+    { '<leader>bc', '<cmd>BufferLinePickClose<cr>', desc = 'Pick close' },
     {
       '<leader>x',
       function()
